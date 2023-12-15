@@ -26,7 +26,7 @@ with col_store_id:
         store_id = st.selectbox(label='Select the Store ID', placeholder="Store ID", index=None, options=store_dict[store_type])
 with col_radio:
     if store_id:
-        flag_weekly_monthly = st.radio("See weekly or monthly sales", options=['Weekly', 'Monthly'], horizontal=True, index=None)
+        flag_weekly_monthly = st.radio("See weekly or monthly sales", options=['Weekly', 'Monthly', 'Raw'], horizontal=True, index=None)
 
 
 if flag_weekly_monthly:
@@ -41,26 +41,24 @@ if button_view_sales:
     df.sort_values(by='Date', inplace=True)
     df = df[df['Store'] == store_id]
     df = df[['Date', 'Sales']]
-    df = df.set_index('Date', drop=False)
+    df_indexed = df.set_index('Date', drop=False)
     if flag_weekly_monthly == "Weekly":
-        df = df.resample('W').mean(numeric_only=True)
-        #st.line_chart(data=df, color="#54007d")
-        fig = px.line(df, x=df.index.values, y="Sales")
-        fig.update_layout(
-            title=f'Weekly Sales of Store ID: {store_id}',
-            xaxis_title='Date',
-            yaxis_title='Sales in USD',
-        )
-    else:
-        df = df.resample('M').mean(numeric_only=True)
-        #st.line_chart(data=df, color="#54007d")
+        df_indexed = df_indexed.resample('W').mean(numeric_only=True)
+    elif flag_weekly_monthly == "Monthly":
+        df_indexed = df_indexed.resample('M').mean(numeric_only=True)
 
-        fig = px.line(df, x=df.index.values, y="Sales")
-        fig.update_layout(
-            title=f'Monthly Sales of Store ID: {store_id}',
-            xaxis_title='Date',
-            yaxis_title='Sales in USD',
-        )
-    fig.update_traces(marker_color='rgb(158,202,225)')
+    #st.line_chart(data=df, color="#54007d")
+    fig = px.line(df_indexed, x=df_indexed.index.values, y="Sales")
+    fig.update_layout(
+        title=f'{flag_weekly_monthly} Sales of Store Type: {store_type} | Store ID: {store_id}',
+        xaxis_title='Date',
+        yaxis_title='Sales in USD',
+    )
+    fig.update_traces(marker_color='rgb(158,202,225)', line=dict(color='purple', width=2))
     st.plotly_chart(fig, use_container_width=True)
+
+
+
+
+
 
