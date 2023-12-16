@@ -71,7 +71,7 @@ try:
         #fig.add_scatter(x=test.index.values, y=test["PredicatedSales"])
         fig.update_traces(marker_color='rgb(158,202,225)', line=dict(color='#0096c7', width=3))
 
-        fig.add_trace(go.Trace(
+        fig.add_trace(go.Scatter(
             x=pred_ci.index,
             y=pred_ci.iloc[:, 0],
             line=dict(width=0.2),
@@ -79,7 +79,7 @@ try:
             name='',
         ))
 
-        fig.add_trace(go.Trace(
+        fig.add_trace(go.Scatter(
             x=pred_ci.index,
             y=pred_ci.iloc[:, 1],
             line=dict(width=0.2),
@@ -88,7 +88,7 @@ try:
             name='Predicted Range',
         ))
 
-        fig.add_trace(go.Trace(x=test.index.values,
+        fig.add_trace(go.Scatter(x=test.index.values,
                                y=test["PredicatedSales"],
                                name="Predicted Sales",
                                line=dict(width=3),
