@@ -54,11 +54,13 @@ def train_arima(df, end_date):
                                              enforce_invertibility=False)
 
     results_sarima = model_sarima.fit(disp=False)
+
+    st.write(f"Prediction Duration: {str(df.idxmax()[0].date())} to {str(end_date)}")
     pred = results_sarima.get_prediction(start=df.idxmax()[0],
                                          end=end_date,
                                          dynamic=True)
     pred_ci = pred.conf_int()
-
+    st.markdown(f"<i>RMSE: {round(min(aic), 2)}</i>", unsafe_allow_html=True)
     return pred, pred_ci
 
 
